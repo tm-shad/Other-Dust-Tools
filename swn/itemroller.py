@@ -6,6 +6,8 @@ from dice import roll
 from dice.elements import Roll
 from dice.utilities import verbose_print as dice_print
 from constants import FORMAT
+from collections.abc import Iterable
+
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO, format=FORMAT)
 log = IndentedLoggerAdapter(logging.getLogger(__name__))
@@ -18,6 +20,14 @@ def get_roll(*args, **kwargs):
         return i[0]
     else:
         return i
+
+
+def flatten(l):
+    for el in l:
+        if isinstance(el, list) and not isinstance(el, (str, bytes)):
+            yield from flatten(el)
+        else:
+            yield el
 
 
 class Item:
@@ -45,15 +55,17 @@ class Item:
 
         if random() > self.chance:
             log.info(f"Failed chance to exist ({self.chance*100}%)")
+            log.pop()
+            return []
         else:
             if self.chance < 1:
                 log.info(f"Passed chance to exist ({self.chance*100}%)")
 
             if self.count != "1":
-                log.info(f"Count = {curr_count}")
+                log.info(f"Rolling count: {self.count} -> {curr_count}")
 
             log.pop()
-            return (curr_count, self.name)
+            return [(curr_count, self.name)]
 
 
 class Table:
@@ -82,9 +94,9 @@ class Table:
 
 
 class TableCall:
-    def __init__(self, table: Table, num_rolls: int = 1, roll: str = None, chance: float = 1.0):
+    def __init__(self, table: Table, num_rolls: str = "1", roll: str = None, chance: float = 1.0):
         self.table_ref = table
-        self.num_rolls = num_rolls
+        self.num_rolls = str(num_rolls)
 
         if roll is None:
             if table.default_dice is not None:
@@ -102,7 +114,7 @@ class TableCall:
 
     def __str__(self):
         out = ""
-        out += f"{self.num_rolls}x " if self.num_rolls > 1 else ""
+        out += f"{self.num_rolls} " if self.num_rolls != "1" else ""
         out += f"{self.table_ref.name} ({self.roll})"
         out += f" [{self.chance*100}%]" if self.chance != 1.0 else ""
         return out
@@ -115,15 +127,22 @@ class TableCall:
 
         if random() > self.chance:
             log.info(f"Failed chance to exist ({self.chance*100}%)")
+            log.pop()
+            return []
         else:
             if self.chance < 1:
                 log.info(f"Passed chance to exist ({self.chance*100}%)")
 
+            if type(self.num_rolls) == str:
+                num_rolls = get_roll(self.num_rolls)
+                if self.num_rolls != "1":
+                    log.info(f"Getting the number of rolls: {self.num_rolls} -> {num_rolls}")
+
             return_list = []
-            for i in range(self.num_rolls):
+            for i in range(num_rolls):
                 curr_roll = get_roll(self.roll)
 
-                log.info(f"Roll #{i+1} on {self.table_ref.name}: {curr_roll}")
+                log.info(f"Roll {i+1} of {num_rolls}: {self.roll} -> {curr_roll}")
 
                 # get the entry from the table and resolve it
                 log.add()
@@ -132,3 +151,24 @@ class TableCall:
 
             log.pop()
             return return_list
+
+
+class Plunder:
+    def __init__(self, rows: list):
+        self.examples = dict()
+        self.loot = dict()
+
+        for id, example, loot in rows:
+            log.debug(f"Adding Plunder Row: {id} [{example}] with {len(loot)} entries")
+            self.examples[id] = example
+            self.loot[id] = loot
+
+    def resolve(self, id):
+        log.info(f"Rolling for {id} (e.g. {self.examples[id]})").push().add()
+
+        out = []
+        for i in self.loot[id]:
+            out += i.resolve()
+
+        log.pop()
+        return list(flatten(out))

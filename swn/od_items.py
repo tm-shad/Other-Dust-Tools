@@ -1,4 +1,4 @@
-from itemroller import Table, Item, TableCall, log
+from itemroller import Table, Item, TableCall, log, Plunder
 
 tables = dict()
 
@@ -214,4 +214,335 @@ for k, i in tables.items():
     log.pop()
 
 
-print(tables["Common Items"].get(40).resolve())
+log.info("Creating Plunder Table").push().add()
+plunder = Plunder(
+    [
+        (
+            "P1",
+            "Impoverished Rabble",
+            [
+                TableCall(tables["Weapon"], roll="1d6"),
+                TableCall(tables["Armor"], roll="1d6"),
+                Item("Rations, Normal", count="1", chance=0.5),
+                TableCall(tables["Random Loot"], chance=0.5),
+            ],
+        ),
+        (
+            "P2",
+            "Raider/Tribal Warrior",
+            [
+                TableCall(tables["Weapon"], roll="1d6+4"),
+                TableCall(tables["Armor"], roll="1d6+4"),
+                Item("Ration, Normal", count="1"),
+                TableCall(tables["Random Loot"], roll="1d20+3", chance=0.25),
+            ],
+        ),
+        (
+            "P3",
+            "Elite Warrior",
+            [
+                TableCall(tables["Weapon"], roll="1d6+6"),
+                TableCall(tables["Armor"], roll="1d6+6"),
+                Item("Ration, Normal", count="1d4"),
+                TableCall(tables["Random Loot"], roll="1d20+5", chance=0.5),
+            ],
+        ),
+        (
+            "P4",
+            "Tribal Chieftain",
+            [
+                TableCall(tables["Weapon"], roll="1d6+10"),
+                TableCall(tables["Armor"], roll="1d8+8"),
+                TableCall(tables["Random Loot"], roll="1d20+10"),
+            ],
+        ),
+        (
+            "P5",
+            "TL3 Warrior/Raider",
+            [
+                TableCall(tables["Weapon"], roll="1d6+12"),
+                TableCall(tables["Armor"], roll="1d6+1"),
+                TableCall(tables["Random Loot"], roll="1d20+5", chance=0.5),
+            ],
+        ),
+        (
+            "P6",
+            "TL4 Common Citizen",
+            [
+                Item("Laser Pistol"),
+                Item("Old Terran Clothing"),
+                TableCall(tables["Random Loot"], roll="1d20+5", chance=0.5),
+            ],
+        ),
+        (
+            "P7",
+            "TL4 Gunman",
+            [
+                TableCall(tables["Weapon"], roll="1d6+20"),
+                TableCall(tables["Armor"], roll="1d4+18"),
+                TableCall(tables["Random Loot"], roll="1d20+10", chance=0.5),
+            ],
+        ),
+        (
+            "P8",
+            "TL4 Beamgunner",
+            [
+                TableCall(tables["Energy Weapon"], roll="1d4+2"),
+                TableCall(tables["Armor"], roll="1d4+18"),
+                TableCall(tables["Random Loot"], roll="1d20+12", chance=0.5),
+            ],
+        ),
+        (
+            "P9",
+            "TL4 Elite Soldier",
+            [
+                TableCall(tables["Energy Weapon"], roll="1d6+6"),
+                TableCall(tables["Armor"], roll="1d6+18"),
+                TableCall(tables["Random Loot"], roll="1d20+12", chance=0.5),
+            ],
+        ),
+        (
+            "P10",
+            "TL4 Champion",
+            [
+                TableCall(tables["Energy Weapon"], roll="1d4+10"),
+                TableCall(tables["Armor"], roll="1d6+20"),
+                TableCall(tables["Random Loot"], roll="1d20+20"),
+            ],
+        ),
+        (
+            "G1",
+            "Animal Nest",
+            [
+                TableCall(tables["Weapon"], roll="1d10", chance=0.5),
+                TableCall(tables["Armor"], roll="1d10", chance=0.5),
+                TableCall(tables["Random Loot"], chance=0.5),
+            ],
+        ),
+        (
+            "G2",
+            "Armory, Mandate",
+            [
+                TableCall(tables["Energy Weapon"], num_rolls="1d6", roll="1d10+4"),
+                Item("Harmony Armor", count="1d6"),
+                TableCall(tables["Armor"], roll="1d8+18", chance=0.5),
+                Item("TL4 Spare Parts", count="1d6"),
+                Item("TL5 Spare Parts", count="1d6", chance=0.5),
+                Item("Power Cell, Type A", count="2d6"),
+            ],
+        ),
+        (
+            "G3",
+            "Armory, Raider",
+            [
+                TableCall(tables["Weapon"], num_rolls="1d6", roll="1d10+2"),
+                TableCall(tables["Weapon"], roll="1d6+9", chance=0.5),
+                TableCall(tables["Armor"], num_rolls="1d6", roll="1d10+3"),
+                Item("TL2 Spare Parts", count="1d6"),
+                Item("rounds of ammo", count="1d4*20"),
+            ],
+        ),
+        (
+            "G4",
+            "Armory, Rebel",
+            [
+                TableCall(tables["Weapon"], num_rolls="1d6", roll="1d10+10"),
+                TableCall(tables["Energy Weapon"], num_rolls="1d4", roll="1d8", chance=0.5),
+                Item("Insurgent Combat Shell", count="1d6"),
+                Item("TL3 Spare Parts", count="1d6"),
+                Item("rounds of ammo", count="1d6*20"),
+            ],
+        ),
+        (
+            "G5",
+            "Camp, Small Raider",
+            [
+                TableCall(tables["Weapon"], num_rolls="1d3", roll="1d10+2"),
+                TableCall(tables["Random Loot"], num_rolls="1d4", roll="1d20+3"),
+                TableCall(tables["Random Loot"], roll="1d20+10"),
+                Item("rounds of ammo", count="20", chance=0.5),
+                Item("Power Cell, Type A", count="1d4", chance=0.5),
+            ],
+        ),
+        (
+            "G6",
+            "Camp, Small Tribal",
+            [
+                TableCall(tables["Weapon"], num_rolls="1d3", roll="1d10"),
+                TableCall(tables["Random Loot"], num_rolls="1d4", roll="1d20+3"),
+                TableCall(tables["Random Loot"], roll="1d20+5"),
+                Item("rounds of ammo", count="20", chance=0.25),
+                Item("Power Cell, Type A", count="1d4", chance=0.25),
+            ],
+        ),
+        (
+            "G7",
+            "Enclave Plunder, TL1",
+            [
+                TableCall(tables["Weapon"], num_rolls="2d6", roll="1d10"),
+                TableCall(tables["Armor"], num_rolls="2d6", roll="1d8+2"),
+                TableCall(tables["Random Loot"], num_rolls="2d6"),
+                TableCall(tables["Random Loot"], num_rolls="1d6", roll="1d20+5"),
+                Item("rounds of ammo", count="1d4*20"),
+                Item("Power Cell, Type A", count="1d4"),
+                TableCall(tables["Rare Items"], chance=0.1),
+                Item("Ration, Normal", count="1d10*10"),
+            ],
+        ),
+        (
+            "G8",
+            "Enclave Plunder, TL2",
+            [
+                TableCall(tables["Weapon"], num_rolls="2d6", roll="1d6+8"),
+                TableCall(tables["Armor"], num_rolls="2d6", roll="1d10+4"),
+                TableCall(tables["Random Loot"], num_rolls="3d6"),
+                TableCall(tables["Random Loot"], num_rolls="1d6", roll="1d20+10"),
+                Item("rounds of ammo", count="3d6*20"),
+                Item("Power Cell, Type A", count="2d6"),
+                TableCall(tables["Rare Items"], chance=0.25),
+                Item("Ration, Normal", count="1d20*10"),
+            ],
+        ),
+        (
+            "G9",
+            "Enclave Plunder, TL3",
+            [
+                TableCall(tables["Weapon"], num_rolls="2d6", roll="1d6+8"),
+                TableCall(tables["Armor"], num_rolls="2d6", roll="1d10+4"),
+                TableCall(tables["Random Loot"], num_rolls="3d6"),
+                TableCall(tables["Random Loot"], num_rolls="1d6", roll="1d20+10"),
+                Item("rounds of ammo", count="3d6*20"),
+                Item("Power Cell, Type A", count="2d6"),
+                TableCall(tables["Rare Items"], chance=0.25),
+                Item("Ration, Normal", count="1d10*20"),
+            ],
+        ),
+        (
+            "G10",
+            "Enclave Plunder, TL4",
+            [
+                TableCall(tables["Weapon"], num_rolls="2d6", roll="1d6+14"),
+                TableCall(tables["Armor"], num_rolls="2d6", roll="1d10+10"),
+                TableCall(tables["Random Loot"], num_rolls="3d6", roll="1d20+5"),
+                TableCall(tables["Random Loot"], num_rolls="1d6", roll="1d20+15"),
+                Item("rounds of ammo", count="3d6*20"),
+                Item("Power Cell, Type A", count="2d6*5"),
+                TableCall(tables["Rare Items"], num_rolls="1d4"),
+                Item("Ration, Normal", count="2d20*20"),
+            ],
+        ),
+        (
+            "G11",
+            "Medical Cache, Major",
+            [
+                Item("Stim", count="1d10+10"),
+                Item("Medkit", count="1d4"),
+            ],
+        ),
+        (
+            "G12",
+            "Medical Cache, Minor",
+            [
+                Item("Stim", count="1d6"),
+                Item("Medkit", chance=0.5),
+            ],
+        ),
+        (
+            "G13",
+            "Ruin, Large Structure",
+            [
+                TableCall(tables["Random Loot"], num_rolls="5d6"),
+                TableCall(tables["Random Loot"], num_rolls="1d10", roll="1d20+10"),
+                TableCall(tables["Rare Items"], num_rolls="1d4-1"),
+                Item("TL4 Spare Parts", count="2d6"),
+            ],
+        ),
+        (
+            "G14",
+            "Ruin, Single Building",
+            [
+                TableCall(tables["Random Loot"], num_rolls="3d6"),
+                TableCall(tables["Random Loot"], num_rolls="1d4", roll="1d20+10"),
+                TableCall(tables["Random Loot"], roll="1d20+20", chance=0.2),
+                Item("TL4 Spare Parts", count="1d6"),
+            ],
+        ),
+        (
+            "G15",
+            "Survival Cache, Enclave",
+            [
+                Item("Ration, Old Terran", count="1d10"),
+                TableCall(tables["Random Loot"], num_rolls="1d6"),
+                Item("rounds of ammo", count="1d4*20", chance=0.5),
+                Item("Power Cell, Type A", count="1d6", chance=0.5),
+            ],
+        ),
+        (
+            "G16",
+            "Survival Cache, Ancient",
+            [
+                Item("Ration, Old Terran", count="3d8"),
+                TableCall(tables["Uncommon Items"], num_rolls="1d6"),
+                Item("Power Cell, Type A", count="1d6+4"),
+            ],
+        ),
+        (
+            "G17",
+            "Tech Cache, Major",
+            [
+                Item("Spare parts of each TL from 3 to 5", count="1d10+10"),
+                TableCall(tables["Uncommon Items"], num_rolls="1d6"),
+                Item("Metatool", chance=0.5),
+                TableCall(tables["Rare Items"], chance=0.5),
+            ],
+        ),
+        (
+            "G18",
+            "Tech Cache, Minor",
+            [
+                Item("Spare parts of TL 1d4+1", count="1d10+10"),
+                TableCall(tables["Random Loot"], roll="1d20+10", chance=0.5),
+            ],
+        ),
+        (
+            "G19",
+            "Trader Caravan",
+            [
+                TableCall(tables["Weapon"], num_rolls="1d4", roll="1d6+9"),
+                TableCall(tables["Armor"], num_rolls="1d4", roll="1d10+4"),
+                Item("rounds of ammo", count="1d6*20"),
+                Item("Power Cell, Type A", count="1d4"),
+                TableCall(tables["Random Loot"], num_rolls="2", roll="1d20+10", chance=0.5),
+                TableCall(tables["Rare Items"], chance=0.25),
+            ],
+        ),
+        (
+            "G20",
+            "Workshop, Old Terran",
+            [
+                Item("Toolkit, TL4", chance=0.75),
+                Item("Toolkit, TL5", chance=0.25),
+                Item("TL4 Spare Parts", count="1d10+15"),
+                Item("TL5 Spare Parts", count="1d8"),
+                TableCall(tables["Random Loot"], num_rolls="2", roll="1d20+15"),  # TODO: Note as broken
+            ],
+        ),
+        (
+            "G21",
+            "Workshop, Scrounger",
+            [
+                Item("Toolkit, TL2"),
+                Item("Toolkit, TL3", chance=0.75),
+                Item("Toolkit, TL4", chance=0.25),
+                Item("TL2 Spare Parts", count="1d10+15"),
+                Item("TL3 Spare Parts", count="1d10+5"),
+                Item("TL4 Spare Parts", count="1d6"),
+                TableCall(tables["Random Loot"], num_rolls="2"),  # TODO: Note as broken
+            ],
+        ),
+    ]
+)
+log.pop()
+
+
+print(plunder.resolve("G2"))

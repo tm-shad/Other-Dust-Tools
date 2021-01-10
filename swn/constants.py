@@ -1,1 +1,1 @@
-FORMAT = "[%(levelname)s] %(message)s"
+FORMAT = "%(levelname)-8s %(message)s"
