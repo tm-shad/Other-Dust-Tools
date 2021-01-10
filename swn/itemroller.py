@@ -123,7 +123,7 @@ class TableCall:
         return f"TableCall[table=`{self.table_ref.name}`; num_rolls={self.num_rolls}; roll={self.roll}; chance={self.chance}]"
 
     def resolve(self):
-        log.info(f"Resolving: {self}").push().add()
+        log.info(f"{self}").push().add()
 
         if random() > self.chance:
             log.info(f"Failed chance to exist ({self.chance*100}%)")
