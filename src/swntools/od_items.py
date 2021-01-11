@@ -1,4 +1,4 @@
-from itemroller import Item, Plunder, Table, TableCall, log
+from swntools.itemroller import Item, Plunder, Table, TableCall, log
 
 tables = dict()
 

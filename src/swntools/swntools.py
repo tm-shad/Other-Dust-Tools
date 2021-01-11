@@ -4,8 +4,8 @@ import sys
 
 from python_log_indenter import IndentedLoggerAdapter
 
-from constants import FORMAT
-from od_items import RollPlunder
+from swntools.constants import FORMAT
+from swntools.od_items import RollPlunder
 
 # logging.basicConfig(format=FORMAT)
 
@@ -58,5 +58,9 @@ All commands share the following args:
         print(RollPlunder(args.plunder_id))
 
 
-if __name__ == "__main__":
+def run():
     SWNTools()
+
+
+if __name__ == "__main__":
+    run()

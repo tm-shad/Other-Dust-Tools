@@ -8,7 +8,7 @@ import inflect
 import re
 from collections import Counter
 
-from constants import DICE_REGEX
+from swntools.constants import DICE_REGEX
 
 log = IndentedLoggerAdapter(logging.getLogger(__name__))
 
