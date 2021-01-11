@@ -1,19 +1,19 @@
 import logging
-from python_log_indenter import IndentedLoggerAdapter
-import sys
 from random import random
+
 from dice import roll
 from dice.elements import Roll
-from dice.utilities import verbose_print as dice_print
-from constants import FORMAT
-from collections.abc import Iterable
+from python_log_indenter import IndentedLoggerAdapter
+import inflect
+import re
+from collections import Counter
 
+from constants import DICE_REGEX
 
-logging.basicConfig(stream=sys.stderr, level=logging.INFO, format=FORMAT)
 log = IndentedLoggerAdapter(logging.getLogger(__name__))
 
 
-def get_roll(*args, **kwargs):
+def get_roll(*args, **kwargs) -> int:
     i = roll(*args, **kwargs)
 
     if type(i) == Roll:
@@ -22,8 +22,8 @@ def get_roll(*args, **kwargs):
         return i
 
 
-def flatten(l):
-    for el in l:
+def flatten(in_list):
+    for el in in_list:
         if isinstance(el, list) and not isinstance(el, (str, bytes)):
             yield from flatten(el)
         else:
@@ -65,7 +65,7 @@ class Item:
                 log.info(f"Rolling count: {self.count} -> {curr_count}")
 
             log.pop()
-            return [(curr_count, self.name)]
+            return [(self.name, curr_count)]
 
 
 class Table:
@@ -137,6 +137,8 @@ class TableCall:
                 num_rolls = get_roll(self.num_rolls)
                 if self.num_rolls != "1":
                     log.info(f"Getting the number of rolls: {self.num_rolls} -> {num_rolls}")
+            else:
+                num_rolls = self.num_rolls
 
             return_list = []
             for i in range(num_rolls):
@@ -171,4 +173,40 @@ class Plunder:
             out += i.resolve()
 
         log.pop()
-        return list(flatten(out))
+        return PlunderResult(list(flatten(out)), self.examples[id])
+
+
+class PlunderResult:
+    def __init__(self, res_list, name) -> None:
+        self.res_list = res_list
+        self.name = name
+        self.roll_descriptions()
+        self.res_list = Counter(dict(res_list))
+
+    def __str__(self):
+        p = inflect.engine()
+        retstr = f"Loot from {p.a(self.name)}:\n"
+        for i, (desc, count) in enumerate(self.res_list.most_common()):
+            desc_split = desc.split(", ", maxsplit=1)
+            retstr += f"\t{p.no(desc_split[0], count)}{', '+desc_split[1] if len(desc_split)==2 else ''}\n"
+
+        return retstr
+
+    def __repr__(self):
+        pass
+        return f"PlunderResult[size {len(self.res_list)}]"
+
+    def roll_descriptions(self):
+        log.info("Resolving all description rolls...").push().add()
+
+        for i in range(len(self.res_list)):
+            if re.search(DICE_REGEX, self.res_list[i][0]):
+                clean_parts = [
+                    str(get_roll(part)) if re.fullmatch(DICE_REGEX, part) else part
+                    for part in re.split(f"({DICE_REGEX})", self.res_list[i][0])
+                ]
+
+                log.info(f"`{self.res_list[i][0]}` -> `{''.join(clean_parts)}`")
+                self.res_list[i] = ("".join(clean_parts), self.res_list[i][1])
+
+        log.pop()
