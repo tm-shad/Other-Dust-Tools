@@ -1,12 +1,12 @@
 import logging
+import re
+from collections import Counter
 from random import random
 
+import inflect
 from dice import roll
 from dice.elements import Roll
 from python_log_indenter import IndentedLoggerAdapter
-import inflect
-import re
-from collections import Counter
 
 from swntools.constants import DICE_REGEX
 
@@ -17,9 +17,9 @@ def get_roll(*args, **kwargs) -> int:
     i = roll(*args, **kwargs)
 
     if type(i) == Roll:
-        return i[0]
+        return int(i[0])
     else:
-        return i
+        return int(i)
 
 
 def flatten(in_list):
@@ -133,12 +133,9 @@ class TableCall:
             if self.chance < 1:
                 log.info(f"Passed chance to exist ({self.chance*100}%)")
 
-            if type(self.num_rolls) == str:
-                num_rolls = get_roll(self.num_rolls)
-                if self.num_rolls != "1":
-                    log.info(f"Getting the number of rolls: {self.num_rolls} -> {num_rolls}")
-            else:
-                num_rolls = self.num_rolls
+            num_rolls = get_roll(self.num_rolls)
+            if self.num_rolls != "1":
+                log.info(f"Getting the number of rolls: {self.num_rolls} -> {num_rolls}")
 
             return_list = []
             for i in range(num_rolls):
@@ -186,7 +183,7 @@ class PlunderResult:
     def __str__(self):
         p = inflect.engine()
         retstr = f"Loot from {p.a(self.name)}:\n"
-        for i, (desc, count) in enumerate(self.res_list.most_common()):
+        for desc, count in self.res_list.most_common():
             desc_split = desc.split(", ", maxsplit=1)
             retstr += f"\t{p.no(desc_split[0], count)}{', '+desc_split[1] if len(desc_split)==2 else ''}\n"
 

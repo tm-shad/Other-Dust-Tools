@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 dice = "*"
 python_log_indenter = "*"
+"discord.py" = "*"
 
 [dev-packages]
 flake8 = "*"
@@ -14,7 +15,7 @@ pipenv = "*"
 pylint = "*"
 pytest = "*"
 black = {git = "https://github.com/psf/black"}
-pyproject = {editable = true, path = "."}
+swntools = {editable = true, path = "."}
 pytest-cov = "*"
 pre-commit = "*"
 
