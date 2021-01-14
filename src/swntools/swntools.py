@@ -23,6 +23,7 @@ Current commands are:
 All commands share the following args:
     -v, --verbose   Increase verbosity and show dice rolls
     -d, --debug     Print debug information
+
 """,
         )
 

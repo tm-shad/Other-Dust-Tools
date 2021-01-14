@@ -7,7 +7,7 @@ def RollPlunder(id):
 
     # T0 Tables: Energy Weapon
     name = "Energy Weapon"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -23,7 +23,7 @@ def RollPlunder(id):
 
     # T0 Tables: Armor
     name = "Armor"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -50,7 +50,7 @@ def RollPlunder(id):
 
     # T0 Tables: Weapon
     name = "Weapon"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -83,7 +83,7 @@ def RollPlunder(id):
     log.pop()
     # T1 Tables: Rare Items
     name = "Rare Items"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -116,7 +116,7 @@ def RollPlunder(id):
 
     # T1 Tables: Uncommon Items
     name = "Uncommon Items"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -155,7 +155,7 @@ def RollPlunder(id):
 
     # T1 Tables: Common Items
     name = "Common Items"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -194,7 +194,7 @@ def RollPlunder(id):
 
     # T2 Table: Random Loot
     name = "Random Loot"
-    log.info(f"Creating {name} Table").push().add()
+    log.debug(f"Creating {name} Table").push().add()
     tables[name] = Table(
         name,
         [
@@ -216,7 +216,7 @@ def RollPlunder(id):
     #     i.print_table()
     #     log.pop()
 
-    log.info("Creating Plunder Table").push().add()
+    log.debug("Creating Plunder Table").push().add()
     plunder = Plunder(
         [
             (

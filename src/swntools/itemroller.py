@@ -185,7 +185,7 @@ class PlunderResult:
         retstr = f"Loot from {p.a(self.name)}:\n"
         for desc, count in self.res_list.most_common():
             desc_split = desc.split(", ", maxsplit=1)
-            retstr += f"\t{p.no(desc_split[0], count)}{', '+desc_split[1] if len(desc_split)==2 else ''}\n"
+            retstr += f"\t - {p.no(desc_split[0], count)}{', '+desc_split[1] if len(desc_split)==2 else ''}\n"
 
         return retstr
 
