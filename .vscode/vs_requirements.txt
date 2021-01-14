@@ -1,0 +1,11 @@
+black
+flake8
+flake8-bugbear
+flake8-docstrings
+pep8-naming
+isort
+pipenv
+pylint
+pytest
+pytest-cov
+pre-commit

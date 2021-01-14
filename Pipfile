@@ -4,8 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+dice = "*"
+python_log_indenter = "*"
 
 [dev-packages]
+flake8 = "*"
+flake8-bugbear = "*"
+pipenv = "*"
+pylint = "*"
+pytest = "*"
+black = {git = "https://github.com/psf/black"}
+pyproject = {editable = true, path = "."}
+pytest-cov = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.8"
