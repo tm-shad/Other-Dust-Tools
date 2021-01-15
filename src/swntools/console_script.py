@@ -11,7 +11,7 @@ from swntools.od_items import RollPlunder
 
 
 class SWNTools:
-    def __init__(self):
+    def __init__(self, argv):
         # Create the parser
         parser = argparse.ArgumentParser(
             description="Command-Line scripts for Stars Without Number",
@@ -25,6 +25,7 @@ All commands share the following args:
     -d, --debug     Print debug information
 
 """,
+            prog=argv[0],
         )
 
         # Add the arguments
@@ -32,24 +33,24 @@ All commands share the following args:
 
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail
-        args = parser.parse_args(sys.argv[1:2])
+        args = parser.parse_args(argv[1:2])
         if not hasattr(self, args.command):
             print("Unrecognized command")
             parser.print_help()
             exit(1)
 
         # use dispatch pattern to invoke method with same name
-        getattr(self, args.command)()
+        getattr(self, args.command)(argv)
 
-    def plunder(self):
-        parser = argparse.ArgumentParser(description="Roll on the Other Dust plunder table")
+    def plunder(self, argv):
+        parser = argparse.ArgumentParser(description="Roll on the Other Dust plunder table", prog=argv[0] + " plunder")
         parser.add_argument("-v", "--verbose", help="Increase verbosity and show dice rolls", action="store_true")
         parser.add_argument("-d", "--debug", help="Print debug information", action="store_true")
         parser.add_argument("plunder_id", help="The 'Type' ID of the plunder row from SWN:Other Dust page 105")
 
         # now that we're inside a subcommand, ignore the first
         # TWO argvs, ie the command (git) and the subcommand (commit)
-        args = parser.parse_args(sys.argv[2:])
+        args = parser.parse_args(argv[2:])
 
         if args.debug:
             logging.basicConfig(level=logging.DEBUG, format=FORMAT)
@@ -60,7 +61,7 @@ All commands share the following args:
 
 
 def run():
-    SWNTools()
+    SWNTools(sys.argv)
 
 
 if __name__ == "__main__":

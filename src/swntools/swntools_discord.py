@@ -1,9 +1,25 @@
+import io
 import os
-import subprocess
+import shlex
+import sys
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
 
 import discord
 
-# subprocess.run(["ls", "-l"])
+from swntools import console_script as cs
+
+
+class Capturing(list):
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._stringio = StringIO()
+        return self
+
+    def __exit__(self, *args):
+        self.extend(self._stringio.getvalue().splitlines())
+        del self._stringio  # free up
+
 
 client = discord.Client()
 
@@ -19,21 +35,26 @@ async def on_message(message):
         return
 
     if message.content.startswith("!swntools") or message.content.startswith("!plunder"):
-        response_str = "Opps, I made an oof!"
-        query = ""
+        # response_str = "Opps, I made an oof!"
+        query = "swntools -h"
 
         if message.content.startswith("!swntools"):
-            query = str(message.content)[len("!swntools") :]
+            query = str(message.content[1:])  # only remove '!'
         elif message.content.startswith("!plunder"):
-            query = " " + str(message.content)[1:]
+            query = "swntools " + str(message.content)[1:]  # remove '!' and add swntools to string
 
-        try:
-            response_str = subprocess.check_output("swntools" + query, stderr=subprocess.STDOUT).decode("utf-8")
-        except subprocess.CalledProcessError as e:
-            response_str = e.output.decode("utf-8")
-            # print(e.output)
+        f_err = io.StringIO()
+        f_out = io.StringIO()
+        with redirect_stderr(f_err):
+            with redirect_stdout(f_out):
+                try:
+                    cs.SWNTools(shlex.split(query))
+                except SystemExit:
+                    pass
 
-        await message.channel.send(response_str)
+        output = f_out.getvalue() + "\n" + f_err.getvalue()
+
+        await message.channel.send(output)
 
 
 client.run(os.getenv("DISCORD_TOKEN"))
